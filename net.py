@@ -24,8 +24,9 @@ class Net:
         self.FrequencyBand_num = FrequencyBand_num                  # 单个基站的频点个数,默认为两个
         self.Subcarrier_num = Subcarrier_num                        # 单个频点的子载波个数
         self.UENumConnectedToBS = []                                # 连接到某个基站的用户数
-        self.Max_BandNumConnectedToUE = Max_BandNumConnectedToUE    # 单个用户最大连接信道数，默认为10个
-        self.BandNumConnectedToUE = []                              # 连接到某个用户的信道数
+        self.Max_BandNumConnectedToUE = Max_BandNumConnectedToUE    # 单个用户最大连接子载波数，默认为10个
+        self.BandNumConnectedToUE = []                              # 连接到某个用户的子载波数
+        self.SN_BandToUE = []                                       # 某基站某子载波连接的用户序号
         self.net_channel = []  # 信道状况
 
     def net_generation(self):
@@ -95,8 +96,9 @@ class Net:
 
     def channel_alloc(self):
         channel_matrix_temp = np.zeros((self.UE_num, self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))
-        UE_order = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num, self.UE_num))  # 到某信道的各用户的信道状况
-        SN_BandToUE = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))       # 连接到某基站某信道的用户序号
+        UE_order = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num, self.UE_num))  # 到某子载波的各用户的信道状况
+        BandNumConnectedToUE = np.zeros(self.UE_num)
+        SN_BandToUE = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))       # 连接到某基站某子载波的用户序号
         for i in range(self.UE_num):
             for j in range(self.BS_num):
                 for m in range(self.FrequencyBand_num * self.Subcarrier_num):
@@ -104,28 +106,26 @@ class Net:
         for i in range(self.BS_num):
             for j in range(self.FrequencyBand_num * self.Subcarrier_num):
                 UE_order[i][j] = channel_matrix_temp[:, i, j].copy()
-        UE_order_val = np.sort(UE_order)        # 信道状况由大到小排序
-        UE_order_index = np.argsort(UE_order)   # 返回排序的索引值，该变量反应了到某信道的用户优先级（哪个用户连接到信道效果最好）
+        UE_order_val = np.sort(UE_order)        # 子载波状况由大到小排序
+        UE_order_index = np.argsort(UE_order)   # 返回排序的索引值，该变量反应了到某子载波的用户优先级（哪个用户连接到该子载波效果最好）
 
         for i in range(self.BS_num):
-            for j in range(self.FrequencyBand_num * self.Subcarrier_num):       # 对信道进行分配，初始化
+            for j in range(self.FrequencyBand_num * self.Subcarrier_num):       # 对子载波进行分配，初始化
                 m = 0
-                while UE_order_val[i][j][m] > 0:                                # 当前序号的信道非零，即表示用户与该信道是可相连的
-                    k = UE_order_index[i][j][m]                                 # 该信道最倾向的用户
-                    if self.BandNumConnectedToUE[k] < self.Max_BandNumConnectedToUE:    # 用户连接信道数未达到最大值
-                        SN_BandToUE[i][j] = k                                   # i基站j信道分配给的用户序号为k
-                        self.BandNumConnectedToUE[k] += 1                       # 用户连接信道加一
+                while UE_order_val[i][j][m] > 0:                                # 当前序号的子载波非零，即表示用户与该子载波是可相连的
+                    k = UE_order_index[i][j][m]                                 # 该子载波最倾向的用户
+                    if BandNumConnectedToUE[k] < self.Max_BandNumConnectedToUE:    # 用户连接子载波数未达到最大值
+                        SN_BandToUE[i][j] = k                                   # i基站j子载波分配给的用户序号为k
+                        BandNumConnectedToUE[k] += 1                       # 用户连接子载波数加一
                         break
-                    else:                                                       # 用户连接信道数达到最大值
+                    else:                                                       # 用户连接子载波数达到最大值
                         m = m+1                                                 # 分配给次优的用户
-
-
-
-
-
+        self.BandNumConnectedToUE = BandNumConnectedToUE
+        self.SN_BandToUE = SN_BandToUE
 
     def net_start(self):
         self.bs_loc_generation()
         self.UE_location = self.ue_loc_generation()
         self.net_generation()
         self.channel_generation()
+        self.channel_alloc()
