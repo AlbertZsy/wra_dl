@@ -7,7 +7,7 @@ import math
 class Net:
     def __init__(self, B=1e7, BS_num=4, UE_num=50, BS_init_power=10, BS_max_power=20,
                  FrequencyBand_num=2, Subcarrier_num=50, net_size=(100, 100), N0=1e-7,
-                 Max_BandNumConnectedToUE = 10):
+                 Max_BandNumConnectedToUE = 15):
         # np.random.seed(1)
         self.BS_num = BS_num
         self.UE_num = UE_num
@@ -111,7 +111,7 @@ class Net:
 
         for i in range(self.BS_num):
             for j in range(self.FrequencyBand_num * self.Subcarrier_num):       # 对子载波进行分配，初始化
-                m = 0
+                m = self.UE_num-1                                               # 上面排序实则为由小到大，要逆序
                 while UE_order_val[i][j][m] > 0:                                # 当前序号的子载波非零，即表示用户与该子载波是可相连的
                     k = UE_order_index[i][j][m]                                 # 该子载波最倾向的用户
                     if BandNumConnectedToUE[k] < self.Max_BandNumConnectedToUE:    # 用户连接子载波数未达到最大值
@@ -119,8 +119,9 @@ class Net:
                         BandNumConnectedToUE[k] += 1                       # 用户连接子载波数加一
                         break
                     else:                                                       # 用户连接子载波数达到最大值
-                        m = m+1                                                 # 分配给次优的用户
+                        m = m-1                                                 # 分配给次优的用户
         self.BandNumConnectedToUE = BandNumConnectedToUE
+        temp1 = np.sum(BandNumConnectedToUE)
         self.SN_BandToUE = SN_BandToUE
 
     def net_start(self):
