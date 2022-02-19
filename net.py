@@ -5,9 +5,9 @@ import math
 
 
 class Net:
-    def __init__(self, B=2e7, BS_num=4, UE_num=50, BS_init_power=10, BS_max_power=20,
+    def __init__(self, B=2e7, BS_num=4, UE_num=50, BS_init_power=10,    BS_max_power=20,
                  FrequencyBand_num=2, Subcarrier_num=50, net_size=(100, 100), N0=1e-7,
-                 Max_BandNumConnectedToUE = 15):
+                 Max_BandNumConnectedToUE=15):
         # np.random.seed(1)
         self.BS_num = BS_num
         self.UE_num = UE_num
@@ -29,6 +29,7 @@ class Net:
         self.SN_BandToUE = []                                       # 某基站某子载波连接的用户序号
         self.net_channel = []                                       # 信道状况
         self.sinr= []                                               # 信干噪比状况
+        self.rate_for_UE = []
 
     def net_generation(self):
         BS_UE_loc = np.vstack((self.BS_location, self.UE_location))
@@ -126,9 +127,9 @@ class Net:
         temp1 = np.sum(BandNumConnectedToUE)
         self.SN_BandToUE = SN_BandToUE
 
-    def init_compute_power_on_bs(self, n):                                      # 初始化分配功率
-        power_per_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)
-        return power_per_sub*np.ones(self.FrequencyBand_num*self.Subcarrier_num)
+    # def init_compute_power_on_bs(self, n):                                      # 初始化分配功率
+    #     power_per_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)
+    #     return power_per_sub*np.ones(self.FrequencyBand_num*self.Subcarrier_num)
 
     def compute_SINR_on_bs_sub(self, n, k):
         if self.SN_BandToUE[n][k] == 0:
@@ -136,7 +137,7 @@ class Net:
             '''应该在哪定义？'''                                               # 下面的power应该为数组，应该修改
         else:
             power_on_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)   # 单个子载波功率大小，初始平均分配，之后用drl方法
-            i = self.SN_BandToUE
+            i = self.SN_BandToUE[n][k]
             sinr = power_on_sub*self.net_chanel[n][k][i]/((np.sum(self.net_channel[:, k, i])
                                                                  - self.net_chanel[n][k][i])*power_on_sub+self.N0)
         return sinr
@@ -148,12 +149,20 @@ class Net:
         bandwidth = self.B/(self.FrequencyBand_num*self.Subcarrier_num)
         return bandwidth * np.sum(log2(1+sinr[n, :]))
 
+    def compute_rate_on_UE(self):       # 对于每个用户的信干噪比进行计算
+        bandwidth = self.B / (self.FrequencyBand_num * self.Subcarrier_num)
+        for i in range(a.BS_num):
+            for j in range(a.FrequencyBand_num*a.Subcarrier_num):
+                if self.SN_BandToUE[i, j]!= 0:
+                    k = self.SN_BandToUE[i, j]
+                    self.rate_for_UE[k] += bandwidth * log2(1+sinr[n, k])
+
     def compute_rate_on_system(self):
         system_rate = 0
         for n in range(self.BS_num):
             system_rate += self.compute_rate_on_bs(n)
+        self.compute_rate_on_UE()
         return system_rate
-
 
     def net_start(self):
         self.bs_loc_generation()
@@ -162,4 +171,5 @@ class Net:
         self.channel_generation()
         self.channel_alloc()
         self.sinr = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))
+        self.rate_for_UE = np.zeros(self.UE_num)
         system_rate = self.compute_rate_on_system()
