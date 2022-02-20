@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc90ed53-0a8f-41fa-b3b4-8614cf55f3da" name="变更" comment="无">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PFA.py" beforeDir="false" afterPath="$PROJECT_DIR$/PFA.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grammar.py" beforeDir="false" afterPath="$PROJECT_DIR$/grammar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/net.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,9 +131,9 @@
     </configuration>
     <list>
       <item itemvalue="Python.未命名" />
-      <item itemvalue="Python.net" />
       <item itemvalue="Python.grammar" />
       <item itemvalue="Python.main_trial" />
+      <item itemvalue="Python.net" />
     </list>
     <recent_temporary>
       <list>
