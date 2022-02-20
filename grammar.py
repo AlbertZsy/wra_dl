@@ -42,5 +42,15 @@ import numpy as np
 # print(a[0, 1])
 # print(a[0][2])
 
-a = np.ones(5)
-print(a)
+# a = np.array([2, 6, 4, 5])                                              # argsort不改变原数组的顺序
+# b = np.argsort(a)
+# print(b)
+# print(a)
+
+# a = 5                                                                       # 向上取整函数
+# b = 2
+# print(math.ceil(a/b))
+
+a = np.ones((2, 5))
+b = a * 12
+print(b)
