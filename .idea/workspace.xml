@@ -7,6 +7,8 @@
     <list default="true" id="fc90ed53-0a8f-41fa-b3b4-8614cf55f3da" name="变更" comment="无">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PFA.py" beforeDir="false" afterPath="$PROJECT_DIR$/PFA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/grammar.py" beforeDir="false" afterPath="$PROJECT_DIR$/grammar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/net.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +46,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../新桌面/桌面/QL_method" />
     <property name="settings.editor.selected.configurable" value="vcs.Subversion" />
   </component>
-  <component name="RunManager" selected="Python.main_trial">
+  <component name="RunManager" selected="Python.grammar">
     <configuration name="未命名" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -137,8 +139,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main_trial" />
         <item itemvalue="Python.grammar" />
+        <item itemvalue="Python.main_trial" />
         <item itemvalue="Python.net" />
       </list>
     </recent_temporary>
@@ -199,9 +201,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/net.py</url>
-          <line>141</line>
-          <option name="timeStamp" value="7" />
+          <url>file://$PROJECT_DIR$/PFA.py</url>
+          <line>98</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

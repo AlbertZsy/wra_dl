@@ -148,15 +148,15 @@ class Net:
         for k in range(self.FrequencyBand_num * self.Subcarrier_num):
             self.sinr[n][k] = self.compute_SINR_on_bs_sub(n, k)
         bandwidth = self.B/(self.FrequencyBand_num*self.Subcarrier_num)
-        return bandwidth * np.sum(log2(1+sinr[n, :]))
+        return bandwidth * np.sum(log2(1+self.sinr[n, :]))
 
     def compute_rate_on_UE(self):       # 对于每个用户的信干噪比进行计算
         bandwidth = self.B / (self.FrequencyBand_num * self.Subcarrier_num)
-        for i in range(a.BS_num):
-            for j in range(a.FrequencyBand_num*a.Subcarrier_num):
+        for i in range(self.BS_num):
+            for j in range(self.FrequencyBand_num*self.Subcarrier_num):
                 if self.SN_BandToUE[i, j]!= 0:
                     k = self.SN_BandToUE[i, j]
-                    self.rate_for_UE[k] += bandwidth * log2(1+sinr[i, j])
+                    self.rate_for_UE[k] += bandwidth * log2(1+self.sinr[i, j])
 
     def compute_rate_on_system(self):
         system_rate = 0

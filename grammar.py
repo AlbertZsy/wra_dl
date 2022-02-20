@@ -51,6 +51,13 @@ import numpy as np
 # b = 2
 # print(math.ceil(a/b))
 
-a = np.ones((2, 5))
-b = a * 12
-print(b)
+# a = np.ones((2, 5))                                                        # 定义一个数组，其中数组元素为固定值
+# b = a * 12
+# print(b)
+
+a = [1, 2, 3, 4]
+b = 4
+if b in a:
+    print("yes")
+else:
+    print("no")
