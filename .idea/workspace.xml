@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PFA.py" beforeDir="false" afterPath="$PROJECT_DIR$/PFA.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/grammar.py" beforeDir="false" afterPath="$PROJECT_DIR$/grammar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_trial.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_trial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/net.py" beforeDir="false" afterPath="$PROJECT_DIR$/net.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +47,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../新桌面/桌面/QL_method" />
     <property name="settings.editor.selected.configurable" value="vcs.Subversion" />
   </component>
-  <component name="RunManager" selected="Python.grammar">
+  <component name="RunManager" selected="Python.main_trial">
     <configuration name="未命名" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -139,8 +140,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.grammar" />
         <item itemvalue="Python.main_trial" />
+        <item itemvalue="Python.grammar" />
         <item itemvalue="Python.net" />
       </list>
     </recent_temporary>
@@ -202,10 +203,27 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/PFA.py</url>
-          <line>98</line>
-          <option name="timeStamp" value="8" />
+          <line>126</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PFA.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PFA.py</url>
+          <line>81</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
 </project>

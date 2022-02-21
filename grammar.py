@@ -39,8 +39,11 @@ import numpy as np
 # print(b)
 
 # a = np.array([[2, 3], [4, 5]])                                            # a[0][1]和a[0,1]无区别
-# print(a[0, 1])
-# print(a[0][2])
+# b = np.ones((5, 2))                                                       # np.ones 初始化为小数
+# print(type(a[0, 1]))
+# print(type(a[0][1]))
+# print(b[0, 1])
+# print(b[0][1])
 
 # a = np.array([2, 6, 4, 5])                                              # argsort不改变原数组的顺序
 # b = np.argsort(a)
@@ -55,9 +58,15 @@ import numpy as np
 # b = a * 12
 # print(b)
 
-a = [1, 2, 3, 4]
-b = 4
-if b in a:
-    print("yes")
-else:
-    print("no")
+# a = [1, 2, 3, 4]
+# b = 4
+# if b in a:
+#     print("yes")
+# else:
+#     print("no")
+
+a = np.array([[2, 3, 5, 6], [3, 3, 3, 3], [6, 1, 4, 8], [6, 6, 1, 9]])
+print(a[1,:])
+
+b = np.sum(np.log2(1+a[1, :]))
+print(b)

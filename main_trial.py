@@ -1,6 +1,6 @@
 from net import Net
 import matplotlib.pyplot as plt
-
+from PFA import PF
 
 def draw_net(net):
     plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -19,5 +19,7 @@ def draw_net(net):
 if __name__ == '__main__':
     network = Net()
     network.net_start()
+    network_1 = PF(network)
+    network_1.start()
     draw_net(network)
 
