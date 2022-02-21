@@ -126,6 +126,6 @@ class PF:
         for i in range(self.cycle):
             a = self.PF_algorithm()
             a.sinr = np.zeros((a.BS_num, a.FrequencyBand_num * a.Subcarrier_num))
-            a.rate_for_UE = np.zeros(b.UE_num)
+            a.rate_for_UE = np.zeros(a.UE_num)
             self.net_ini = a
             system_rate = self.recompute_rate_on_system()
