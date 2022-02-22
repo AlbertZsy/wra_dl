@@ -54,7 +54,7 @@ class PF:
         channel_matrix_temp = np.zeros((b.UE_num, b.BS_num, b.FrequencyBand_num * b.Subcarrier_num))
         UE_order = np.zeros((b.BS_num, b.FrequencyBand_num * b.Subcarrier_num, b.UE_num))  # 到某子载波的各用户的信道状况
         BandNumConnectedToUE = np.zeros(b.UE_num)
-        SN_BandToUE = np.zeros((b.BS_num, b.FrequencyBand_num * b.Subcarrier_num))  # 连接到某基站某子载波的用户序号
+        SN_BandToUE = np.ones((b.BS_num, b.FrequencyBand_num * b.Subcarrier_num))*b.UE_num  # 连接到某基站某子载波的用户序号
         for i in range(b.UE_num):
             for j in range(b.BS_num):
                 for m in range(b.FrequencyBand_num * b.Subcarrier_num):
@@ -78,12 +78,12 @@ class PF:
                     else:  # 用户连接子载波数达到最大值
                         m = m - 1  # 分配给次优的用户
         b.BandNumConnectedToUE = BandNumConnectedToUE
-        b.SN_BandToUE = SN_BandToUE
+        b.SN_BandToUE = SN_BandToUE.astype(int)
         return b
 
     def recompute_SINR_on_bs_sub(self, n, k):
         c = self.net_ini
-        if c.SN_BandToUE[n][k] == 0:
+        if c.SN_BandToUE[n][k] == c.UE_num:
             sinr = 0
         else:
             power_on_sub = c.BS_max_power/(c.FrequencyBand_num*c.Subcarrier_num)
@@ -96,27 +96,27 @@ class PF:
         c = self.net_ini
         assert 0 <= n < c.BS_num
         for k in range(c.FrequencyBand_num * c.Subcarrier_num):
-            c.sinr[n][k] = c.recompute_SINR_on_bs_sub(n, k, c)        # 计算sinr
+            c.sinr[n][k] = self.recompute_SINR_on_bs_sub(n, k)        # 计算sinr
         bandwidth = c.B/(c.FrequencyBand_num*c.Subcarrier_num)
         self.net_ini.sinr = c.sinr
-        return bandwidth * np.sum(log2(1+c.sinr[n, :]))
+        return bandwidth * np.sum(np.log2(1+c.sinr[n, :]))
 
     def recompute_rate_on_UE(self):       # 对于每个用户的信干噪比进行计算
         c = self.net_ini
         bandwidth = c.B / (c.FrequencyBand_num * c.Subcarrier_num)
         for i in range(c.BS_num):
             for j in range(c.FrequencyBand_num*c.Subcarrier_num):
-                if c.SN_BandToUE[i, j]!= 0:
+                if c.SN_BandToUE[i, j]!= c.UE_num:
                     k = c.SN_BandToUE[i, j]
-                    c.rate_for_UE[k] += bandwidth * log2(1+c.sinr[i, j])    # 计算用户级速率
+                    c.rate_for_UE[k] += bandwidth * math.log(1+c.sinr[i, j], 2)    # 计算用户级速率
         self.net_ini.rate_for_UE = c.rate_for_UE
 
     def recompute_rate_on_system(self):
         c = self.net_ini
         system_rate = 0
         for n in range(c.BS_num):
-            system_rate += c.recompute_rate_on_bs(n)
-        c.recompute_rate_on_UE(c)
+            system_rate += self.recompute_rate_on_bs(n)
+        self.recompute_rate_on_UE()
         return system_rate
 
     def start(self):
