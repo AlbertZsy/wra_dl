@@ -1,6 +1,7 @@
 import math
 from net import Net
 import numpy as np
+import copy
 
 
 class PF:
@@ -13,10 +14,9 @@ class PF:
         self.BS_UE_priority_index = []  # 倾向连接用户在数组中的位置
 
     def PF_algorithm(self):         # 单位应该是用户
-        a = self.net_ini
+        a = copy.deepcopy(self.net_ini)                                                         # 深拷贝，创建一个新对象。
         UE_maximum = math.ceil(a.FrequencyBand_num*a.Subcarrier_num/a.Max_BandNumConnectedToUE)  # 计算基站任意时刻连接的用户数
         self.BS_UE_priority = np.ones((a.BS_num, UE_maximum), dtype=np.int16)*a.UE_num  # 初始化用户序号为最大值，与0区分
-        # self.BS_UE_priority = self.BS_UE_priority.astype(int)
         self.BS_UE_priority_index = np.zeros(a.BS_num, dtype=np.int16)
         self.rate_accumulation += a.rate_for_UE
         for i in range(a.UE_num):                                     # 比例函数=当前速率/累计速率
@@ -124,8 +124,9 @@ class PF:
         self.rate_accumulation = np.zeros(self.net_ini.UE_num)
         self.rate_proportion = np.zeros(self.net_ini.UE_num)
         for i in range(self.cycle):
+            print(i)
             a = self.PF_algorithm()
             a.sinr = np.zeros((a.BS_num, a.FrequencyBand_num * a.Subcarrier_num))
             a.rate_for_UE = np.zeros(a.UE_num)
-            self.net_ini = a
+            self.net_ini = copy.deepcopy(a)          # 将新对象的值赋给net_ini
             system_rate = self.recompute_rate_on_system()

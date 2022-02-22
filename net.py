@@ -7,7 +7,7 @@ import math
 class Net:
     def __init__(self, B=2e7, BS_num=4, UE_num=50, BS_init_power=10, BS_max_power=20,
                  FrequencyBand_num=2, Subcarrier_num=50, net_size=(100, 100), N0=1e-7,
-                 Max_BandNumConnectedToUE=15):
+                 Max_BandNumConnectedToUE=10):
         np.random.seed(1)
         self.BS_num = BS_num
         self.UE_num = UE_num
@@ -126,7 +126,6 @@ class Net:
                     else:                                                       # 用户连接子载波数达到最大值
                         m = m-1                                                 # 分配给次优的用户
         self.BandNumConnectedToUE = BandNumConnectedToUE
-        temp1 = np.sum(BandNumConnectedToUE)
         self.SN_BandToUE = SN_BandToUE.astype(int)
 
     # def init_compute_power_on_bs(self, n):                                      # 初始化分配功率
@@ -136,7 +135,6 @@ class Net:
     def compute_SINR_on_bs_sub(self, n, k):
         if self.SN_BandToUE[n][k] == self.UE_num:
             sinr = 0
-            '''应该在哪定义？'''                                               # 下面的power应该为数组，应该修改
         else:
             power_on_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)   # 单个子载波功率大小，初始平均分配，之后用drl方法
             i = self.SN_BandToUE[n][k]
@@ -155,7 +153,6 @@ class Net:
         bandwidth = self.B / (self.FrequencyBand_num * self.Subcarrier_num)
         for i in range(self.BS_num):
             for j in range(self.FrequencyBand_num*self.Subcarrier_num):
-                k = self.SN_BandToUE[i][j]
                 if self.SN_BandToUE[i][j] != self.UE_num:
                     k = self.SN_BandToUE[i][j]
                     self.rate_for_UE[k] += bandwidth * math.log(1+self.sinr[i][j], 2)

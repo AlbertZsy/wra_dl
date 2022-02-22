@@ -21,5 +21,6 @@ if __name__ == '__main__':
     network.net_start()
     network_1 = PF(network)
     network_1.start()
+    print("end")
     draw_net(network)
 
