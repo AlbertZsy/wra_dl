@@ -31,6 +31,8 @@ class Net:
         self.net_channel = []                                       # 信道状况
         self.sinr= []                                               # 信干噪比状况
         self.rate_for_UE = []                                       # 用户级速率
+        self.rate_for_BS = []
+        self.power = []
 
     def net_generation(self):
         BS_UE_loc = np.vstack((self.BS_location, self.UE_location))
@@ -136,10 +138,13 @@ class Net:
         if self.SN_BandToUE[n][k] == self.UE_num:
             sinr = 0
         else:
-            power_on_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)   # 单个子载波功率大小，初始平均分配，之后用drl方法
+            # power_on_sub = self.BS_max_power/(self.FrequencyBand_num*self.Subcarrier_num)   # 单个子载波功率大小，初始平均分配，之后用drl方法
             i = self.SN_BandToUE[n][k]
-            sinr = power_on_sub*self.net_channel[i][n][k]/((np.sum(self.net_channel[i, :, k]) -
-                                                            self.net_channel[i][n][k]) * power_on_sub + self.N0)
+            power_interference = 0
+            for m in range(self.BS_num):
+                if m != n:
+                    power_interference+=self.net_channel[i][m][k]*power[m,k]
+            sinr = power[n, k]*self.net_channel[i][n][k]/(power_interference + self.N0)
         return sinr
 
     def compute_rate_on_bs(self, n):
@@ -147,10 +152,11 @@ class Net:
         for k in range(self.FrequencyBand_num * self.Subcarrier_num):
             self.sinr[n][k] = self.compute_SINR_on_bs_sub(n, k)
         bandwidth = self.B/(self.FrequencyBand_num*self.Subcarrier_num)
-        return bandwidth * np.sum(np.log2(1+self.sinr[n, :]))
+        self.rate_for_BS[n] = bandwidth * np.sum(np.log2(1+self.sinr[n, :]))
 
     def compute_rate_on_UE(self):       # 对于每个用户的信干噪比进行计算
         bandwidth = self.B / (self.FrequencyBand_num * self.Subcarrier_num)
+        self.rate_for_UE = np.zeros(self.UE_num)
         for i in range(self.BS_num):
             for j in range(self.FrequencyBand_num*self.Subcarrier_num):
                 if self.SN_BandToUE[i][j] != self.UE_num:
@@ -161,7 +167,8 @@ class Net:
         system_rate = 0
 
         for n in range(self.BS_num):
-            system_rate += self.compute_rate_on_bs(n)
+            self.compute_rate_on_bs(n)
+            system_rate += self.rate_for_BS[n]
         self.compute_rate_on_UE()
 
         return system_rate
@@ -174,4 +181,7 @@ class Net:
         self.channel_alloc()
         self.sinr = np.zeros((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))
         self.rate_for_UE = np.zeros(self.UE_num)
+        self.rate_for_BS = np.zeros(self.BS_num)
+        power_on_sub = self.BS_max_power / (self.FrequencyBand_num * self.Subcarrier_num)
+        self.power = np.ones((self.BS_num, self.FrequencyBand_num * self.Subcarrier_num))*power_on_sub
         system_rate = self.compute_rate_on_system()
