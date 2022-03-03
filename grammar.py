@@ -65,19 +65,12 @@ import numpy as np
 # else:
 #     print("no")
 
-# a = np.array([[2, 3, 5, 6], [3, 3, 3, 3], [6, 1, 4, 8], [6, 6, 1, 9]])
+# a = np.array([[2, 3, 5, 6], [3, 3, 3, 3], [6, 1, 4, 8], [6, 6, 1, 9]])   # 输出矩阵第一列
 # print(a[1,:])
-#
+
 # b = np.sum(np.log2(1+a[1, :]))
 # print(b)
 
-a = [1,2,3,4]                                                               # 两个数组合并
-b = [6,7,8,9]
-c = np.hstack((a,b[1:4]))
-print(c)
-
-c =[]
-for i in range(4):
-    if i!=2:
-        c.append(b[i])
-print(c)
+a = np.array([2, 3, 5, 6])
+b = np.array([1, 3, 5, 2])
+print(a*b)

@@ -13,14 +13,18 @@ def draw_net(net):
     plt.legend(['基站', '用户'])
     plt.xlim([0, 100])
     plt.ylim([0, 100])
-    plt.show()
+
 
 
 if __name__ == '__main__':
     network = Net()
     network.net_start()
-    network_1 = PF(network)
-    network_1.start()
-    print("end")
+    # network_1 = PF(network)
+    # network_1.start()
+    plt.figure(1)
     draw_net(network)
+    network.update()
+    plt.figure(2)
+    draw_net(network)
+    plt.show()
 
